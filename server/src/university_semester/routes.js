@@ -9,4 +9,5 @@ router.post('/create/:year_id/:semester', verifyToken, create)
 router.get('/all/:year_id', verifyToken, getAll)
 router.get('/:id', verifyToken, getById)
 router.delete('/:id', verifyToken, deleteItem)
+
 export default router
