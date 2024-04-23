@@ -10,6 +10,7 @@ const server = express()
 server.use(express.json())
 server.use('/api/user', userRoute)
 server.use('/api/university_year', universityYearRoute)
+
 server.listen(PORT, ()=>{
     connectDb()
     console.log(`Server running on PORT ${PORT}`)

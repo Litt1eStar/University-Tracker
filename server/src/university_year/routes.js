@@ -5,8 +5,8 @@ import { verifyToken } from '../middlewares/verifyToken.js'
 
 const router = Router()
 
-router.post('/create', verifyToken, create)
-router.get('/', getAll)
-router.get('/:id', getById)
+router.post('/create/:year', verifyToken, create)
+router.get('/', verifyToken, getAll)
+router.get('/:id', verifyToken, getById)
 
 export default router
