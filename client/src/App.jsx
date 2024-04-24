@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <Box>
-        Box
+        This is new Message
       </Box>
     </>
   )
