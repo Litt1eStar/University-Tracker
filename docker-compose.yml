@@ -5,9 +5,11 @@ services:
     restart: always
     build: ./server
     ports:
-      - "8081:8081"
+      - "8081:5000" # Map host port 8081 to container port 5000
     depends_on:
       - mongo
+    networks:
+      - tracker-network
   client:
     container_name: client-container
     restart: always
@@ -16,8 +18,10 @@ services:
       - "5173:5173"
     depends_on:
       - api
+    networks:
+      - tracker-network
   mongo:
-    container_name: mongo-backedn
+    container_name: mongo-backend
     image: mongo
     expose:
       - "27017"
@@ -25,6 +29,11 @@ services:
       - "27017:27017"
     volumes:
       - apiDB:/data/db
+    networks:
+      - tracker-network
 
 volumes:
   apiDB:
+
+networks:
+  tracker-network:
