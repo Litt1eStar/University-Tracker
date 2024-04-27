@@ -14,8 +14,9 @@ services:
       - university-tracker-network
     develop:
       watch:
-        - path: ./client
         - action: rebuild
+          path: ./client
+          target: /app
 
   backend:
     build: ./server
@@ -27,8 +28,9 @@ services:
       - university-tracker-network
     develop:
       watch:
-        - path: ./server
         - action: rebuild
+          path: ./server
+          target: /app
 
 networks:
   university-tracker-network:
