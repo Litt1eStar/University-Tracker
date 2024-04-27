@@ -1,39 +1,45 @@
-version: '3.8'
+version: '3'
+
 services:
-  api:  
-    container_name: api-container
-    restart: always
-    build: ./server
-    ports:
-      - "8081:5000" # Map host port 8081 to container port 5000
-    depends_on:
-      - mongo
-    networks:
-      - tracker-network
-  client:
-    container_name: client-container
-    restart: always
+  frontend:
     build: ./client
+    container_name: react-app
     ports:
       - "5173:5173"
+    stdin_open: true
+    tty: true
     depends_on:
-      - api
+      - backend
     networks:
-      - tracker-network
-  mongo:
-    container_name: mongo-backend
-    image: mongo
-    expose:
-      - "27017"
-    ports:
-      - "27017:27017"
-    volumes:
-      - apiDB:/data/db
-    networks:
-      - tracker-network
+      - university-tracker-network
+    develop:
+      watch:
+        - path: ./client
+        - action: rebuild
 
-volumes:
-  apiDB:
+  backend:
+    build: ./server
+    container_name: node-app
+    ports:
+      - "5000:5000"
+    restart: always
+    networks:
+      - university-tracker-network
+    develop:
+      watch:
+        - path: ./server
+        - action: rebuild
+
+  # database:
+  #   image: mongo
+  #   container_name: mongo-db
+  #   ports:
+  #     - "27017:27017"
+  #   networks:
+  #     - university-tracker-network
+  #   volumes:
+  #     - ./data:/data/db
 
 networks:
-  tracker-network:
+  university-tracker-network:
+    driver: bridge

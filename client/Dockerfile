@@ -1,14 +1,13 @@
-FROM node
+FROM node:21-alpine
 
-RUN npm install -g http-server
+WORKDIR /app
 
-WORKDIR /client
-
-COPY package*.json /client/
+COPY package*.json .
 
 RUN npm install
 
-COPY . /client/
+COPY . .    
 
 EXPOSE 5173
-CMD [ "npm", "run", "dev" ]
+
+CMD [ "npm", "start" ]
