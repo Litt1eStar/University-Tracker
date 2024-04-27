@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  frontend:
+    build: ./client
+    container_name: react-app
+    ports:
+      - "5173:5173"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+    networks:
+      - university-tracker-network
+    develop:
+      watch:
+        - path: ./client
+        - action: rebuild
+
+  backend:
+    build: ./server
+    container_name: node-app
+    ports:
+      - "5000:5000"
+    restart: always
+    networks:
+      - university-tracker-network
+    develop:
+      watch:
+        - path: ./server
+        - action: rebuild
+
+  # database:
+  #   image: mongo
+  #   container_name: mongo-db
+  #   ports:
+  #     - "27017:27017"
+  #   networks:
+  #     - university-tracker-network
+  #   volumes:
+  #     - ./data:/data/db
+
+networks:
+  university-tracker-network:
+    driver: bridge
