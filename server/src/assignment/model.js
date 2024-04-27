@@ -24,6 +24,7 @@ const schema = mongoose.Schema({
     }
 }, { timestamps: true})
 
+
 const Assignment = mongoose.model('Assignment', schema)
 export default Assignment
 
