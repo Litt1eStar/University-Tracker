@@ -8,11 +8,8 @@ export const create = async (req, res) => {
     return res.status(400).json({ error: "Credential Not Complete" });
 
   try {
-    const score = await Score.create({value: 0, max_value: 0});
-    if (!score) throw new Error('Failed to create new score')
     const queryItem = await Classes.create({
       ref_semester: semester_id,
-      ref_score: score._id,
       class_name,
       lecturer,
       priority
@@ -65,3 +62,20 @@ export const deleteItem = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+export const updateScore = async (req, res) => {
+  const { id } = req.params
+  const { score } = req.body
+  if (!id) return res.status(400).json({ error: "Credential Not Complete" });
+
+  try {
+    const classes = await Classes.findById(id)
+    if(!classes) throw new Error('Class not existed')
+    classes.total_score += Number(score)
+    const updated = await classes.save()
+    res.status(200).json(updated)
+  } catch (error) {
+    res.status(500).json({error: error.message})
+  }
+}

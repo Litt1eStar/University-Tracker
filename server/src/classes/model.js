@@ -6,9 +6,9 @@ const schema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
-    ref_score: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
+    total_score: {
+      type: Number,
+      default: 0      
     },
     class_name: {
       type: String,
