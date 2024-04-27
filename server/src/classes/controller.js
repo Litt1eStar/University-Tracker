@@ -1,9 +1,8 @@
-import Semester from "../university_semester/model.js";
 import Classes from "./model.js";
 
 export const create = async (req, res) => {
   const { semester_id } = req.params;
-  const { class_name, lecturer } = req.body;
+  const { class_name, lecturer, priority } = req.body;
   if (!semester_id)
     return res.status(400).json({ error: "Credential Not Complete" });
 
@@ -12,6 +11,7 @@ export const create = async (req, res) => {
       ref_semester: semester_id,
       class_name,
       lecturer,
+      priority
     });
     if (!queryItem) throw new Error("Failed to Create New Item");
     res.status(200).json(queryItem);
@@ -61,3 +61,20 @@ export const deleteItem = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+export const updateScore = async (req, res) => {
+  const { id } = req.params
+  const { score } = req.body
+  if (!id) return res.status(400).json({ error: "Credential Not Complete" });
+
+  try {
+    const classes = await Classes.findById(id)
+    if(!classes) throw new Error('Class not existed')
+    classes.total_score += Number(score)
+    const updated = await classes.save()
+    res.status(200).json(updated)
+  } catch (error) {
+    res.status(500).json({error: error.message})
+  }
+}
