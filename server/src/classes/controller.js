@@ -1,4 +1,3 @@
-import Score from '../score/model.js'
 import Classes from "./model.js";
 
 export const create = async (req, res) => {
