@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
 import { Button, Stack, TextField, Typography } from "@mui/material";
@@ -7,6 +8,7 @@ import { Button, Stack, TextField, Typography } from "@mui/material";
 const SignUp = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate()
+  const { setAuthUser } = useAuthContext()
 
   const initialForm = {
     username: "",
@@ -32,6 +34,7 @@ const SignUp = () => {
       if (res.ok) {
         toast.success("Successfully Create User");
         const data = await res.json();
+        setAuthUser(data)
         sessionStorage.setItem("token", data)
         setForm(initialForm)
         navigate('/')
@@ -81,7 +84,7 @@ const SignUp = () => {
         </Button>
         <Typography fontSize={10}>
           Already Have Account?{" "}
-          <Typography fontSize={12} display={"inline"} color={"red"}>
+          <Typography fontSize={12} display={"inline"} color={"red"} onClick={()=>navigate('/signin')}>
             Signin
           </Typography>{" "}
         </Typography>
