@@ -30,16 +30,6 @@ services:
         - path: ./server
         - action: rebuild
 
-  # database:
-  #   image: mongo
-  #   container_name: mongo-db
-  #   ports:
-  #     - "27017:27017"
-  #   networks:
-  #     - university-tracker-network
-  #   volumes:
-  #     - ./data:/data/db
-
 networks:
   university-tracker-network:
     driver: bridge

@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-      <Button onClick={fetchData}>Click Me!!</Button>
+      <Button onClick={fetchData}>Click Me!! Now</Button>
       <Box>
         {data?.map((item) => (
           <Box>{item.year}</Box>
