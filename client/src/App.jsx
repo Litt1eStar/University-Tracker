@@ -13,6 +13,7 @@ import "./App.css";
 import toast from "react-hot-toast";
 import YearPage from "./pages/YearPage";
 import SemesterPage from "./pages/SemesterPage";
+import ClassesPage from "./pages/ClassesPage";
 
 function App() {  
   const { authUser } = useAuthContext()
@@ -30,6 +31,7 @@ function App() {
             <Route path="/dashboard" element={authUser ? <Dashboard /> : <SignIn />} />
             <Route path="/year/:year_id/:year_val" element={authUser ? <YearPage /> : <SignIn />} />
             <Route path="/semester/:semester_id/:semester_val" element={authUser ? <SemesterPage /> : <SignIn/> } />
+            <Route path="/class/:class_id" element={authUser ? <ClassesPage /> :  <SignIn />} />
           </Routes>
         </Stack>
       </BrowserRouter>

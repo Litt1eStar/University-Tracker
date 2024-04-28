@@ -25,7 +25,7 @@ const SideBar = () => {
   };
   return (
     <>
-      <Stack direction="row" width={user ? '10%' : 0} mr={isOpen ? 1 : 5}>
+      <Stack direction="row" width={isOpen ? '10%' : 0} mr={isOpen ? 1 : 5}>
         <Stack
           width={isOpen ? "98%" : 0}
           gap={2}
