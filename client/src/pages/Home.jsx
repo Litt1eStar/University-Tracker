@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@mui/material";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import YearCard from "../components/YearCard";
@@ -67,6 +67,10 @@ const Home = () => {
       toast.error(error.message);
     }
   };
+
+  useEffect(()=>{
+    fetchData()
+  }, [])
 
   return (
     <>

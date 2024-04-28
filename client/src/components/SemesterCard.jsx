@@ -3,17 +3,17 @@ import { Card, CardHeader, CardActions, Button } from "@mui/material";
 import { useNavigate } from 'react-router-dom'
 import LaunchIcon from "@mui/icons-material/Launch";
 
-const YearCard = ({ item }) => {
-    const navigate = useNavigate()
+const SemesterCard = ({ item, currentYear }) => {
+const navigate = useNavigate()
 
   const handleOpen = () => {
-    navigate(`/year/${item._id}/${item.year}`)
+    navigate(`/semester/${item._id}/${item.semester}`)
   };
 
   return (
     <>
-      <Card sx={{ width: 200, height: 200 }}>
-        <CardHeader title={`Year ${item.year}`} />
+      <Card sx={{ width: 300, height: 200 }}>
+        <CardHeader title={`Year ${currentYear}, Semester ${item.semester}`} />
         <CardActions>
           <Button sx={{ mx: "auto", mt: 10 }} onClick={handleOpen}>
             <LaunchIcon />
@@ -24,4 +24,4 @@ const YearCard = ({ item }) => {
   );
 };
 
-export default YearCard;
+export default SemesterCard;
