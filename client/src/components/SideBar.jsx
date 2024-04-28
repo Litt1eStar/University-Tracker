@@ -1,17 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Stack, Typography, Icon, Box } from "@mui/material";
+import { Stack, Typography, Icon, Box, Button } from "@mui/material";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import CloseIcon from "@mui/icons-material/Close";
 import HomeIcon from "@mui/icons-material/Home";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { useAuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
+  const { setAuthUser, user } = useAuthContext()
+
   const toggleSidebar = () => setIsOpen(!isOpen);
 
+  const handleLogout = () => {
+    sessionStorage.removeItem("token")
+    toast.success('Succesfully Logout')
+    setAuthUser(null)
+    navigate('/signin')
+  }
   return (
     <>
       <Stack direction="row" width={isOpen ? "6%" : 0} mr={isOpen ? 1 : 5}>
@@ -37,7 +47,7 @@ const SideBar = () => {
                 sx={{ mx: "auto", cursor: isOpen ? "pointer" : "default" }}
                 onClick={() => navigate("/profile")}
               >
-                Woody
+                {user.username}
               </Typography>
               <Icon
                 sx={{ mx: "auto", cursor: isOpen ? "pointer" : "default" }}
@@ -51,6 +61,14 @@ const SideBar = () => {
               >
                 <DashboardIcon />
               </Icon>
+              <Button
+                color="warning"
+                variant="text"
+                sx={{ width: "80%", height: "30px", mx: "auto" }}
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
             </>
           )}
         </Stack>

@@ -10,9 +10,11 @@ import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
 import SideBar from './components/SideBar'
 import "./App.css";
+import toast from "react-hot-toast";
 
 function App() {  
   const { authUser } = useAuthContext()
+  
   return (
     <>
       <BrowserRouter>
@@ -22,8 +24,8 @@ function App() {
             <Route path="/" element={authUser ? <Home />: <SignIn />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={authUser ? <Profile /> : <SignIn />} />
+            <Route path="/dashboard" element={authUser ? <Dashboard /> : <SignIn />} />
           </Routes>
         </Stack>
       </BrowserRouter>
