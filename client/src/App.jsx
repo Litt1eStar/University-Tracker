@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import SideBar from './components/SideBar'
 import "./App.css";
 import toast from "react-hot-toast";
+import YearPage from "./pages/YearPage";
 
 function App() {  
   const { authUser } = useAuthContext()
@@ -26,6 +27,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/profile" element={authUser ? <Profile /> : <SignIn />} />
             <Route path="/dashboard" element={authUser ? <Dashboard /> : <SignIn />} />
+            <Route path="/year/:year_id" element={authUser ? <YearPage /> : <SignIn />} />
           </Routes>
         </Stack>
       </BrowserRouter>

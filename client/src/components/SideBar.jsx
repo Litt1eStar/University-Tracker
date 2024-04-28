@@ -12,16 +12,16 @@ import toast from "react-hot-toast";
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
-  const { setAuthUser, user } = useAuthContext()
+  const { setAuthUser, user } = useAuthContext();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   const handleLogout = () => {
-    sessionStorage.removeItem("token")
-    toast.success('Succesfully Logout')
-    setAuthUser(null)
-    navigate('/signin')
-  }
+    sessionStorage.removeItem("token");
+    toast.success("Succesfully Logout");
+    setAuthUser(null);
+    navigate("/signin");
+  };
   return (
     <>
       <Stack direction="row" width={isOpen ? "6%" : 0} mr={isOpen ? 1 : 5}>
