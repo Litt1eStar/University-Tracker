@@ -1,23 +1,50 @@
 import React from "react";
 import { Card, Stack, Typography, Button } from "@mui/material";
-const AssignmentCard = ({ item }) => {
+import { useAuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
+const AssignmentCard = ({ item, fetchData, updateScore, updateClassScore }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const { authUser } = useAuthContext();
 
-    const calculateDayLeft = (date) => {
-        const parts = date.split("/");
-        const day = parseInt(parts[0], 10);
-        const month = parseInt(parts[1], 10); // Adjust month to zero-based index
-        const year = parseInt(parts[2], 10);
+  const calculateDayLeft = (date) => {
+    const parts = date.split("/");
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10); // Adjust month to zero-based index
+    const year = parseInt(parts[2], 10);
 
-        const targetDate = new Date(year, month, day)
-        const currentDate = new Date()
-        
+    const targetDate = new Date(year, month, day);
+    const currentDate = new Date();
 
-        const differenceMs = targetDate - currentDate;
-        const differenceDays = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
+    const differenceMs = targetDate - currentDate;
+    const differenceDays = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
 
-        return differenceDays;
+    return differenceDays;
+  };
+
+  const handleDone = async () => {
+    try {
+      const res = await fetch(
+        `${API_URL}/api/assignment/update/status/${item._id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${authUser}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        throw new Error("Failed to update status");
+      }
+      toast.success("Nice one bro :3");
+      await updateScore(item.score_value)
+      await updateClassScore()
+      await fetchData();
+    } catch (error) {
+      toast.error(error.message);
     }
-    const dayLeft = calculateDayLeft(item.duedate)
+  };
+
+  const dayLeft = calculateDayLeft(item.duedate);
   return (
     <>
       <Card sx={{ height: 80, width: "100%", mb: 2 }}>
@@ -30,8 +57,10 @@ const AssignmentCard = ({ item }) => {
             alignItems="center"
             pl={1}
           >
-            <Typography fontSize={item.name.length > 35 ? 20 : 25}>{item.name}</Typography>
-            <Typography fontSize={20} mr={2}>
+            <Typography fontSize={item.name.length > 35 ? 20 : 25}>
+              {item.name}
+            </Typography>
+            <Typography fontSize={20} mr={2} ml={3}>
               Days Left: {dayLeft > 0 ? dayLeft : "-"}
             </Typography>
           </Stack>
@@ -57,12 +86,22 @@ const AssignmentCard = ({ item }) => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Typography fontSize={15} color={item.status ? "green":"darkgoldenrod"} fontWeight={500}>
-                {item.status ? "Complete": "Ongoing"}
+              <Typography
+                fontSize={15}
+                color={item.status ? "green" : "darkgoldenrod"}
+                fontWeight={500}
+              >
+                {item.status ? "Complete" : "Ongoing"}
               </Typography>
-              <Button variant="contained" sx={{ mr: 2, height: 30, ":hover": { color: 'lightblue'} }}>
-                Done
-              </Button>
+              {!item.status && (
+                <Button
+                  variant="contained"
+                  sx={{ mr: 2, height: 30, ":hover": { color: "lightblue" } }}
+                  onClick={handleDone}
+                >
+                  Done
+                </Button>
+              )}
             </Stack>
           </Stack>
         </Stack>

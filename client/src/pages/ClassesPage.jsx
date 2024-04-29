@@ -1,76 +1,122 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuthContext } from '../context/AuthContext'
+import { useAuthContext } from "../context/AuthContext";
 import { Box, Button, Card, Stack, TextField, Typography } from "@mui/material";
 import AssignmentCard from "../components/AssignmentCard";
 import LaunchIcon from "@mui/icons-material/Launch";
 import toast from "react-hot-toast";
 const ClassesPage = () => {
   const { class_id } = useParams();
-  const { authUser } = useAuthContext()
-  const navigate = useNavigate()
-  const API_URL = import.meta.env.VITE_API_URL
+  const { authUser } = useAuthContext();
+  const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [assignment_name, setAssignmentName] = useState("");
   const [score, setScore] = useState("");
   const [duedate, setDuedate] = useState("");
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
+  const [classes, setClasses] = useState(null);
 
-  const handleAdd = async() => {
+  const filterdData = data?.filter((data) => data.status == false); //Assignment that is not Done
+  const assignment_done_amount =
+    filterdData.length > data.length
+      ? filterdData.length - data.length
+      : data.length - filterdData.length;
+
+  const handleAdd = async () => {
     try {
       const res = await fetch(`${API_URL}/api/assignment/create/${class_id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${authUser}`
+          Authorization: `Bearer ${authUser}`,
         },
         body: JSON.stringify({
           name: assignment_name,
           duedate: formattedDate(duedate),
-          score_value: score
-        })
-      })
-      if(!res.ok){
-        throw new Error('Failed to create new assignment')
+          score_value: score,
+        }),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to create new assignment");
       }
-      await fetchData()
-      setAssignmentName("")
-      setScore("")
-      setDuedate("")
+      await fetchData();
+      setAssignmentName("");
+      setScore("");
+      setDuedate("");
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
+  };
 
-  const fetchData = async() => {
+  const fetchData = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/assignment/getAll/${class_id}`,{
+      const res = await fetch(`${API_URL}/api/assignment/getAll/${class_id}`, {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${authUser}`
-        }
-      })
-      if(!res.ok){
-        throw new Error(`Failed to get data from db`)
+          Authorization: `Bearer ${authUser}`,
+        },
+      });
+      if (!res.ok) {
+        throw new Error(`Failed to get data from db`);
       }
-      const data = await res.json()
-      setData(data)
+      const data = await res.json();
+      setData(data);
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
+  };
+
+  const updateScore = async (score) => {
+    try {
+      const res = await fetch(
+        `${API_URL}/api/classes/update/score/${class_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authUser}`,
+          },
+          body: JSON.stringify({ score }),
+        }
+      );
+      if (!res.ok) {
+        throw new Error("Failed to Update Class Score");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const updateClassScore = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/classes/${class_id}`, {
+        headers: {
+          Authorization: `Bearer ${authUser}`,
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to get classes");
+      }
+      const data = await res.json();
+      setClasses(data);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const formattedDate = (dateString) => {
-    const date = new Date(dateString)
-    const day = date.getDate()
-    const month = date.getMonth()
-    const year = date.getFullYear()
-    return `${day}/${month}/${year}`
-  }
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
 
-  useEffect(()=>{
-    fetchData()
-  }, [])
+  useEffect(() => {
+    fetchData();
+    updateClassScore();
+  }, []);
 
   return (
     <>
@@ -78,8 +124,13 @@ const ClassesPage = () => {
         <Stack width={"65%"} height={"100%"}>
           <div style={{ height: "100%", overflowY: "auto" }}>
             {/* Assignment Card */}
-            {data?.map(item => (
-              <AssignmentCard item={item} />
+            {filterdData?.map((item) => (
+              <AssignmentCard
+                item={item}
+                fetchData={fetchData}
+                updateScore={updateScore}
+                updateClassScore={updateClassScore}
+              />
             ))}
             {/* Assignment Card */}
           </div>
@@ -118,7 +169,7 @@ const ClassesPage = () => {
               sx={{ width: "90%" }}
               onChange={(e) => setDuedate(e.target.value)}
             />
-            <Button onClick={handleAdd} >Add new assignment</Button>
+            <Button onClick={handleAdd}>Add new assignment</Button>
           </Stack>
           {/* Input Box */}
 
@@ -135,13 +186,13 @@ const ClassesPage = () => {
             alignItems={"flex-start"}
           >
             <Typography mx={1} fontSize={15} color={"GrayText"}>
-              Score: 0/100
+              Score: {classes ? classes.total_score : 0}/100
             </Typography>
             <Typography mx={1} fontSize={15} color={"GrayText"}>
-              Assignment Done: 0
+              Assignment Done: {assignment_done_amount}
             </Typography>
             <Typography mx={1} fontSize={15} color={"GrayText"} mb={1}>
-              Assignemnt Ongoing: 3
+              Assignemnt Ongoing: {filterdData.length}
             </Typography>
             <Card
               variant="outlined"
@@ -166,7 +217,7 @@ const ClassesPage = () => {
                       color: "primary.main",
                     },
                   }}
-                  onClick={()=>navigate(`/assignment/done/${class_id}`)}
+                  onClick={() => navigate(`/assignment/done/${class_id}`)}
                 >
                   <LaunchIcon />
                 </Box>
