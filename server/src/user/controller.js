@@ -32,6 +32,8 @@ export const signup = async(req, res) => {
 }
 
 export const signin = async(req, res) => {
+    console.log('signin');
+    
     const { username, password} = req.body
     if(!username || !password)
         throw new Error('Credential Not Complete')
@@ -44,6 +46,19 @@ export const signin = async(req, res) => {
         if(!match) throw new Error('Password not Correct')
         const token = initializeToken(existed._id, existed.username)
         res.status(200).json(token)
+    } catch (error) {
+        res.status(500).json({error: error.message})
+    }
+}
+
+export const getUserInfo = async(req, res) => {
+    console.log('e')
+    const user_id = req.user.id
+    if(!user_id) return res.status(401).json({error: 'Unauthorized'})
+    try {
+        const user = await User.findById(user_id)
+        if(!user) throw new Error('User not Existed')
+        res.status(200).json({username: user.username})
     } catch (error) {
         res.status(500).json({error: error.message})
     }

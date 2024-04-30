@@ -1,30 +1,40 @@
-import { useState } from "react";
-import { Box, Button } from "@mui/material";
-import "./App.css";
+import { Box, Stack } from "@mui/material";
 
-function App() {
-  const [data, setData] = useState([]);
-  const apiUrl = import.meta.env.VITE_API_URL;
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAuthContext } from "./context/AuthContext";
 
-  const fetchData = async () => {
-    const res = await fetch(`${apiUrl}/api/university_year`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2Mjc1NGY5YTBlNDZhNzVkYmJmMGE2MiIsInVzZXJuYW1lIjoidXNlcjAzIiwiaWF0IjoxNzE0MTkwNjkyfQ.Gj_xe5KawMw6GlvGF6-D6A15ersJEHYzYeABQuzDyfY`,
-      },
-    });
-    const data = await res.json();
-    setData(data);    
-  };
+import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import Profile from './pages/Profile';
+import Dashboard from './pages/Dashboard';
+import SideBar from './components/SideBar'
+import YearPage from "./pages/YearPage";
+import SemesterPage from "./pages/SemesterPage";
+import ClassesPage from "./pages/ClassesPage";
+import AssignmentDonePage from "./pages/AssignmentDonePage";
 
+function App() {  
+  const { authUser } = useAuthContext()
+  
   return (
     <>
-      <Button onClick={fetchData}>Click Me!! Now</Button>
-      <Box>
-        {data?.map((item) => (
-          <Box>{item.year}</Box>
-        ))}
-      </Box>
+      <BrowserRouter>
+        <Stack width='100%' height='620px' direction='row'>
+          {authUser && (<SideBar />)} 
+          <Routes>
+            <Route path="/" element={authUser ? <Home />: <SignIn />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/profile" element={authUser ? <Profile /> : <SignIn />} />
+            <Route path="/dashboard" element={authUser ? <Dashboard /> : <SignIn />} />
+            <Route path="/year/:year_id/:year_val" element={authUser ? <YearPage /> : <SignIn />} />
+            <Route path="/semester/:semester_id/:semester_val" element={authUser ? <SemesterPage /> : <SignIn/> } />
+            <Route path="/class/:class_id" element={authUser ? <ClassesPage /> :  <SignIn />} />
+            <Route path="/assignment/done/:class_id" element={authUser ? <AssignmentDonePage /> : <SignIn />} />
+          </Routes>
+        </Stack>
+      </BrowserRouter>
     </>
   );
 }
