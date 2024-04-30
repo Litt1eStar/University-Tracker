@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import path from 'path'
 
 import userRoute from './src/user/routes.js'
 import universityYearRoute from './src/university_year/routes.js'
@@ -17,8 +18,10 @@ const corsOptions = {
     credential: true
 }
 const app = express()
+const __dirname = path.resolve()
 
 app.use(cors(corsOptions))
+app.use(express.static(path.join(__dirname, "/client/dist")))
 app.use(express.json())
 
 app.use('/api/user', userRoute)
@@ -26,6 +29,10 @@ app.use('/api/university_year', universityYearRoute)
 app.use('/api/semester', semesterRoutes)
 app.use('/api/classes', classesRoute)
 app.use('/api/assignment', assignmentRoute)
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+  });
 
 app.listen(PORT, ()=>{
     connectDb()
