@@ -13,7 +13,7 @@ const YearCard = ({ item }) => {
   return (
     <>
       <Card sx={{ width: 200, height: 200 }}>
-        <CardHeader title={`Year ${item.year}`} />
+        <CardHeader title={`Year ${item.year}`} sx={{ px: 7}} />
         <CardActions>
           <Button sx={{ mx: "auto", mt: 10 }} onClick={handleOpen}>
             <LaunchIcon />

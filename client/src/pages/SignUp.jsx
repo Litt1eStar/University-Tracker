@@ -50,7 +50,7 @@ const SignUp = () => {
   return (
     <>
       <Stack width="50%" mx={"auto"} mt={5}>
-        <Typography mb={5} variant="h4">
+        <Typography mx={'auto'} mb={5} variant="h4">
           Signup
         </Typography>
         <TextField
@@ -82,7 +82,7 @@ const SignUp = () => {
         <Button sx={{ width: "20%", mx: "auto", mb: 1 }} onClick={(e)=>handleSubmit(e)}>
           Submit
         </Button>
-        <Typography fontSize={10}>
+        <Typography fontSize={10} mx={'auto'}>
           Already Have Account?{" "}
           <Typography fontSize={12} display={"inline"} color={"red"} onClick={()=>navigate('/signin')}>
             Signin
