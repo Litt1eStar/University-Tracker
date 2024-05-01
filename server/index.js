@@ -16,7 +16,7 @@ const devOrigin = 'http://localhost:5173'
 const origin = process.env.NODE_ENV === "production" ? prodOrigins : devOrigin
 const corsOptions = {
     origin: origin,
-    credential: true,
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }
 const app = express()
