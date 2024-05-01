@@ -1,6 +1,5 @@
 import express from 'express'
 import cors from 'cors'
-import path from 'path'
 
 import userRoute from './src/user/routes.js'
 import universityYearRoute from './src/university_year/routes.js'
@@ -10,7 +9,7 @@ import assignmentRoute from './src/assignment/routes.js'
 
 import { connectDb } from './connectDb.js'
 
-const PORT = 5000
+const PORT = 5000 || process.env.PORT;
 const prodOrigins = [process.env.PROD_ORIGIN_1, process.env.PROD_ORIGIN_2]
 const devOrigin = 'http://localhost:5173'
 const origin = process.env.NODE_ENV === "production" ? prodOrigins : devOrigin
@@ -21,7 +20,6 @@ const corsOptions = {
 }
 
 const app = express()
-
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*'); 
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
