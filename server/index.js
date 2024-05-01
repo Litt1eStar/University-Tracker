@@ -12,10 +12,12 @@ import { connectDb } from './connectDb.js'
 
 const PORT = 5000
 
-const corsProdUrl = 'http://localhost:5173'
+const devOrigin = 'http://localhost:5173'
+const origin = process.env.NODE_ENV === "production" ? process.env.PROD_ORIGIN : devOrigin
 const corsOptions = {
-    origin: corsProdUrl,
-    credential: true
+    origin: origin,
+    credential: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }
 const app = express()
 
