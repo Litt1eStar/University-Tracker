@@ -20,7 +20,6 @@ const corsOptions = {
 const app = express()
 
 app.use(cors(corsOptions))
-app.use(express.static(path.join(__dirname, "/client/dist")))
 app.use(express.json())
 
 app.use('/api/user', userRoute)
