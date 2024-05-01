@@ -11,9 +11,9 @@ import assignmentRoute from './src/assignment/routes.js'
 import { connectDb } from './connectDb.js'
 
 const PORT = 5000
-
+const prodOrigins = [process.env.PROD_ORIGIN_1, process.env.PROD_ORIGIN_2]
 const devOrigin = 'http://localhost:5173'
-const origin = process.env.NODE_ENV === "production" ? process.env.PROD_ORIGIN : devOrigin
+const origin = process.env.NODE_ENV === "production" ? prodOrigins : devOrigin
 const corsOptions = {
     origin: origin,
     credential: true,
